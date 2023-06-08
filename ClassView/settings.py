@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-48&w*82cr8!bvpfki0+m$&4sdnggy!)s#e1a=f6_c2o5ea(()e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,10 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'myapp'
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -79,6 +82,15 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+# 'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'djangoFreeHostin$Production',
+#         'USER': 'djangoFreeHostin',
+#         'PASSWORD': 'dbashohag11g',
+#         'HOST': 'djangoFreeHosting.mysql.pythonanywhere-services.com',
+#         'PORT': '3306',
+#     }
+
 }
 
 
@@ -117,7 +129,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = os.path.join(BASE_DIR , "static/"),
+STATICFILES_DIRS = os.path.join(BASE_DIR , "static"),
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
