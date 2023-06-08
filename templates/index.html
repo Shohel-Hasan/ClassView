@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<select id="category-filter">
+  <option value="">All Categories</option>
+  {% for category in categories %}
+    <option value="{{ category.category_name }}">{{ category.category_name }}</option>
+  {% endfor %}
+</select>
+
+<select id="brand-filter">
+  <option value="">All Brands</option>
+  {% for brand in brands %}
+    <option value="{{ brand.brand_name }}">{{ brand.brand_name }}</option>
+  {% endfor %}
+</select>
+<div class="container" id="product-container">
+    {% for product in products %}
+    <p>{{ product.title }}</p>
+    <p>{{ product.desc }}</p>
+    <p>{{ product.price }}</p>
+    <p>{{ product.created }}</p>
+        <img src="{{ product.image_url }}" alt="">
+    {% endfor %}
+
+</div>
+
+<ul id="product-list"></ul>
+
+</body>
+
+<script>
+  // Handle filter change event
+  $('#category-filter, #brand-filter').on('change', function() {
+    // Get selected filter values
+    var category_id = $('#category-filter').val();
+    var brand_id = $('#brand-filter').val();
+
+
+    // Send AJAX request to the filtering view
+    $.ajax({
+      url: 'search/',
+      data: {
+        'category_id': category_id,
+        'brand_id': brand_id
+      },
+      success: function(response) {
+        // Update the product list with filtered results
+        var productData = response.products;
+        var productList = $('#product-list');
+        var existsProducts = $('#product-container')
+        productList.empty();
+        existsProducts.empty();
+
+
+        console.log(productData)
+        for (var i = 0; i < productData.length; i++) {
+            var product = productData[i];
+            console.log(product)
+            var listItem = $('<li></li>');
+          var title = $('<h3></h3>').text(product.title);
+          var desc = $('<p></p>').text(product.description);
+          var price = $('<p></p>').text(`Price: $${product.price ?? 'N/A'}`);
+          var image = $('<img>').attr('src', product.image);
+
+          console.log({desc, price, image})
+          listItem.append(title, desc, price, image);
+          productList.append(listItem);
+
+        }
+      }
+    });
+  });
+</script>
+</html>
