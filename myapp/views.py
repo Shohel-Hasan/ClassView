@@ -22,7 +22,8 @@ def search(request):
     brand_name = request.GET.getlist('brand_names[]')
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
-
+    print(category_name)
+    print(request.GET)
     query = ''
 
     if category_name:

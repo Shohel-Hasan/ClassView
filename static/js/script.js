@@ -1,37 +1,48 @@
-var brandFilter = [];
-    var category_name, minValue, maxValue;
+   const brandFilter = [];
+   let category_name, minValue, maxValue;
+
+   const filter = {
+     brandList: [],
+     categoryName: null,
+     minValue: null,
+     maxValue: null,
+   }
+
 
     $(document).ready(function() {
 
     $('#category-list').on('click', '.category-link', function(event) {
     event.preventDefault();
-    category_name = $(this).text();
-    console.log(category_name);
+    filter.categoryName = $(this).text();
+    console.log({ brandFilter,category_name, minValue, maxValue})
     filterProducts();
-  });
+      console.log(filter)
+
+   });
 
   $('.form-check-input').on('change', function() {
     var brandName = $(this).val().trim();
 
     if ($(this).is(':checked')) {
-      brandFilter.push(brandName);
-      console.log(brandFilter);
+      filter.brandList.push(brandName);
+
     } else {
-      var index = brandFilter.indexOf(brandName);
+      var index = filter.brandList.indexOf(brandName);
       if (index !== -1) {
-        brandFilter.splice(index, 1);
+        filter.brandList.splice(index, 1);
       }
     }
+
+     console.log(filter)
     filterProducts();
   });
 
   $('#price-filter').on('click', function() {
-    minValue = $('#typeNumber1').val();
-    maxValue = $('#typeNumber2').val();
+    filter.minValue = $('#typeNumber1').val();
+    filter.maxValue = $('#typeNumber2').val();
 
     // Do something with the values
-    console.log('Min Value:', minValue);
-    console.log('Max Value:', maxValue);
+     console.log(filter)
     filterProducts();
 
   });
@@ -39,15 +50,24 @@ var brandFilter = [];
 
 
   function filterProducts() {
-    // Perform AJAX request and product filtering here
+
+// Serialize the object
+var params = $.param(filter);
+
+// Get the current URL
+var currentUrl = window.location.href;
+
+// Append the parameters to the URL
+var urlWithParams = currentUrl + '?' + params;
+
     $.ajax({
       url: 'search/',
 
       data: {
-        'category_name': category_name,
-        'brand_names[]': brandFilter,
-        'min_price': minValue,
-        'max_price': maxValue
+        'category_name': filter.categoryName,
+        'brand_names[]': filter.brandList,
+        'min_price': filter.minValue,
+        'max_price': filter.maxValue
       },
       success: function(response) {
         // Process the response and update the product list
@@ -82,9 +102,7 @@ var brandFilter = [];
 
         }
       },
-      error: function() {
-        // Handle error case
-      }
+
     });
   }
 
