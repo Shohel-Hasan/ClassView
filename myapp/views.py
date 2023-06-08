@@ -41,6 +41,17 @@ def search(request):
     if max_price:
         query = query_set.filter(price__lte=max_price)
 
+    if category_name and brand_name and min_price:
+        query = query_set.filter(category__category__category_name__iexact=category_name, brand__brand_name__in=brand_name, price__gte=min_price)
+
+    if category_name and brand_name and max_price:
+        query = query_set.filter(category__category__category_name__iexact=category_name, brand__brand_name__in=brand_name, price__lte=max_price)
+
+    if category_name and max_price:
+        query = query_set.filter(category__category__category_name__iexact=category_name, price__lte=max_price)
+
+    if category_name and min_price:
+        query = query_set.filter(category__category__category_name__iexact=category_name, price__gte=min_price)
 
     product_data = []
     if query:

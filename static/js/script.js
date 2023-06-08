@@ -1,31 +1,22 @@
-   const brandFilter = [];
-   let category_name, minValue, maxValue;
+const filter = {
+  brandList: [],  // Array to store selected brands
+  categoryName: null,  // Variable to store selected category name
+  minValue: null,  // Variable to store minimum price value
+  maxValue: null,  // Variable to store maximum price value
+};
 
-   const filter = {
-     brandList: [],
-     categoryName: null,
-     minValue: null,
-     maxValue: null,
-   }
-
-
-    $(document).ready(function() {
-
-    $('#category-list').on('click', '.category-link', function(event) {
+$(document).ready(function() {
+  $('#category-list').on('click', '.category-link', function(event) {
     event.preventDefault();
     filter.categoryName = $(this).text();
-    console.log({ brandFilter,category_name, minValue, maxValue})
     filterProducts();
-      console.log(filter)
-
-   });
+  });
 
   $('.form-check-input').on('change', function() {
     var brandName = $(this).val().trim();
 
     if ($(this).is(':checked')) {
       filter.brandList.push(brandName);
-
     } else {
       var index = filter.brandList.indexOf(brandName);
       if (index !== -1) {
@@ -33,7 +24,6 @@
       }
     }
 
-     console.log(filter)
     filterProducts();
   });
 
@@ -41,28 +31,13 @@
     filter.minValue = $('#typeNumber1').val();
     filter.maxValue = $('#typeNumber2').val();
 
-    // Do something with the values
-     console.log(filter)
     filterProducts();
-
   });
 
-
-
   function filterProducts() {
-
-// Serialize the object
-var params = $.param(filter);
-
-// Get the current URL
-var currentUrl = window.location.href;
-
-// Append the parameters to the URL
-var urlWithParams = currentUrl + '?' + params;
-
+    // Perform AJAX request and product filtering here
     $.ajax({
       url: 'search/',
-
       data: {
         'category_name': filter.categoryName,
         'brand_names[]': filter.brandList,
@@ -70,14 +45,14 @@ var urlWithParams = currentUrl + '?' + params;
         'max_price': filter.maxValue
       },
       success: function(response) {
-        // Process the response and update the product list
         var productData = response.products;
         var productList = $('#product-list');
         productList.empty();
+
         for (var i = 0; i < productData.length; i++) {
           var product = productData[i];
           // Create card elements and append them to productList
-          var card = $('<div class="col-lg-4 col-md-6 col-sm-6 d-flex"></div>');
+            var card = $('<div class="col-lg-4 col-md-6 col-sm-6 d-flex"></div>');
           var cardContent = $('<div class="card w-100 my-2 shadow-2-strong"></div>');
           var cardImage = $('<img class="card-img-top">').attr('src', product.image);
           var cardBody = $('<div class="card-body d-flex flex-column"></div>');
@@ -100,10 +75,12 @@ var urlWithParams = currentUrl + '?' + params;
           card.append(cardContent);
           productList.append(card);
 
+          // ...
         }
       },
-
+      error: function() {
+        // Handle error case
+      }
     });
   }
-
 });
